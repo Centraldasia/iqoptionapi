@@ -21,6 +21,8 @@ class TimeSync(Base):
 
         :returns: The server timestamp.
         """
+        if self.__server_timestamp is None:
+            return None
         return self.__server_timestamp / 1000
 
     @server_timestamp.setter
@@ -34,7 +36,10 @@ class TimeSync(Base):
 
         :returns: The server datetime.
         """
-        return datetime.datetime.fromtimestamp(self.server_timestamp)
+        timestamp = self.server_timestamp
+        if timestamp is None:
+            return None
+        return datetime.datetime.fromtimestamp(timestamp)
 
     @property
     def expiration_time(self):
@@ -58,7 +63,10 @@ class TimeSync(Base):
 
         :returns: The expiration datetime.
         """
-        return self.server_datetime + datetime.timedelta(minutes=self.expiration_time)
+        server_dt = self.server_datetime
+        if server_dt is None:
+            return None
+        return server_dt + datetime.timedelta(minutes=self.expiration_time)
 
     @property
     def expiration_timestamp(self):
@@ -66,4 +74,7 @@ class TimeSync(Base):
 
         :returns: The expiration timestamp.
         """
-        return time.mktime(self.expiration_datetime.timetuple())
+        exp_dt = self.expiration_datetime
+        if exp_dt is None:
+            return None
+        return time.mktime(exp_dt.timetuple())
